@@ -12,13 +12,21 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffolfKey = GlobalKey<ScaffoldState>();
+
   final ScrollController _scrollController = ScrollController();
+
+  Filter _filter = Filter(
+      maxPrice: 100,
+      minPrice: 10,
+      orderBy: OrderBy.DATE,
+      vendorType: VENDOR_TYPE_PARTICULAR);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffolfKey,
       appBar: AppBar(
         elevation: 0,
         title: const Text('Filtrar busca'),
@@ -33,30 +41,43 @@ class _FilterScreenState extends State<FilterScreen> {
               children: <Widget>[
                 const SectionTitle(title: 'Ordernar por'),
                 OrderByField(
-                  initialValue: OrderBy.DATE,
-                  onSaved: (v){
-
-                  }
-                ),
+                    initialValue: _filter.orderBy,
+                    onSaved: (v) {
+                      _filter.orderBy = v;
+                    }),
                 const SectionTitle(title: 'Preço (R\$)'),
                 PriceRangeField(
-
+                  filter: _filter,
                 ),
                 const SectionTitle(title: 'Tipo de anunciante'),
                 VendorTypeField(
-                  initialValue: VENDOR_TYPE_PARTICULAR | VENDOR_TYPE_PROFESSIONAL,
-                  onSaved: (v){
-
+                  initialValue: _filter.vendorType,
+                  onSaved: (v) {
+                    _filter.vendorType = v;
                   },
                 ),
-                const SizedBox(height: 100,)
+                const SizedBox(
+                  height: 100,
+                )
               ],
             ),
           ),
           AnimatedButton(
             scrollController: _scrollController,
-            onTap: (){
-              print("tocou!");
+            onTap: () {
+              if (_formKey.currentState.validate())
+                _formKey.currentState.save();
+
+              if (_filter.maxPrice != null && _filter.minPrice != null) {
+                if (_filter.minPrice > _filter.maxPrice) {
+                  _scaffolfKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text('Faixa de Preço inválida'),
+                    ),
+                  );
+                  return;
+                }
+              }
             },
           )
         ],
