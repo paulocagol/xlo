@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 class IconTile extends StatelessWidget {
+  const IconTile({this.label, this.iconData, this.onTap, this.highlighted});
+
   final String label;
   final IconData iconData;
   final VoidCallback onTap;
   final bool highlighted;
-
-  const IconTile(
-      {Key key, this.label, this.iconData, this.onTap, this.highlighted = false})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +14,9 @@ class IconTile extends StatelessWidget {
       title: Text(
         label,
         style: TextStyle(
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.8,
-          color: highlighted ? Colors.blue : Colors.black,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.8,
+            color: highlighted ? Colors.blue : Colors.black
         ),
       ),
       leading: Icon(
