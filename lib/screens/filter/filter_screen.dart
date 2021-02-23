@@ -12,21 +12,22 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffolfKey = GlobalKey<ScaffoldState>();
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
 
   Filter _filter = Filter(
-      maxPrice: 100,
-      minPrice: 10,
-      orderBy: OrderBy.DATE,
-      vendorType: VENDOR_TYPE_PARTICULAR);
+    maxPrice: 100,
+    minPrice: 10,
+    vendorType: VENDOR_TYPE_PARTICULAR,
+    orderBy: OrderBy.PRICE
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffolfKey,
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0,
         title: const Text('Filtrar busca'),
@@ -41,10 +42,11 @@ class _FilterScreenState extends State<FilterScreen> {
               children: <Widget>[
                 const SectionTitle(title: 'Ordernar por'),
                 OrderByField(
-                    initialValue: _filter.orderBy,
-                    onSaved: (v) {
-                      _filter.orderBy = v;
-                    }),
+                  initialValue: _filter.orderBy,
+                  onSaved: (v){
+                    _filter.orderBy = v;
+                  }
+                ),
                 const SectionTitle(title: 'Preço (R\$)'),
                 PriceRangeField(
                   filter: _filter,
@@ -52,31 +54,35 @@ class _FilterScreenState extends State<FilterScreen> {
                 const SectionTitle(title: 'Tipo de anunciante'),
                 VendorTypeField(
                   initialValue: _filter.vendorType,
-                  onSaved: (v) {
+                  onSaved: (v){
                     _filter.vendorType = v;
                   },
                 ),
-                const SizedBox(
-                  height: 100,
-                )
+                const SizedBox(height: 100,)
               ],
             ),
           ),
           AnimatedButton(
             scrollController: _scrollController,
-            onTap: () {
-              if (_formKey.currentState.validate())
+            onTap: (){
+              if(_formKey.currentState.validate()){
                 _formKey.currentState.save();
 
-              if (_filter.maxPrice != null && _filter.minPrice != null) {
-                if (_filter.minPrice > _filter.maxPrice) {
-                  _scaffolfKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text('Faixa de Preço inválida'),
-                    ),
-                  );
-                  return;
+                if(_filter.maxPrice != null && _filter.minPrice != null){
+                  if(_filter.minPrice > _filter.maxPrice){
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: const Text(
+                           'Faixa de preço inválida'
+                        ),
+                        backgroundColor: Colors.pink,
+                      )
+                    );
+                    return;
+                  }
                 }
+
+                // SALVAR TUDO E PESQUISAR ANUNCIOS!!!
               }
             },
           )

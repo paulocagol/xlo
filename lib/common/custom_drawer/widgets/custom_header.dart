@@ -5,11 +5,9 @@ class CustomHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: (){
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (cotext) => LoginScreen(),
-          ),
+          MaterialPageRoute(builder: (context)=>LoginScreen())
         );
       },
       child: Container(
@@ -23,9 +21,7 @@ class CustomHeader extends StatelessWidget {
               color: Colors.white,
               size: 30,
             ),
-            const SizedBox(
-              width: 20,
-            ),
+            const SizedBox(width: 20,),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
